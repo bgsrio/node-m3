@@ -25,7 +25,7 @@ app.get("/", (request, response) => {
 });
 
 //MÉTODO POST
-app.post('/create', (request, response) => {
+app.post("/create", (request, response) => {
   const newData = {
     //captura o body da requisição e adiciona um id
     ...request.body,
@@ -37,7 +37,35 @@ app.post('/create', (request, response) => {
 });
 
 //método put
+app.put("/edit/:id", (request, response) => {
+  const { id } = request.params;
 
+  //seta o id como parâmetro, reconhecendo o item
+  const update = data.find((item) => item.id === id);
+
+  const index = data.indexOf(update);
+  //array[posição] = item
+  // atualiza o item existente
+  data[index] = {
+    ...update,
+    ...request.body,
+  };
+
+  return response.status(200).json(data[index]);
+});
+
+//método delete
+app.delete("/delete/:id", (request, response) => {
+  const { id } = request.params;
+
+  const deleteById = data.find((item) => item.id === id);
+  const index = data.indexOf(deleteById);
+
+  // exclui o item posicionado no index
+  data.splice(index, 1);
+
+  return response.status(200).json(data)
+});
 
 // servidor subindo pro ar
 app.listen(Number(process.env.PORT), () => {
